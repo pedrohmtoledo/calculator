@@ -1,10 +1,24 @@
 
-// Function to exec a operation with 2 numbers
+// create variable to store the button pressed. show the button pressed on the display
+let display = document.querySelector("#display");
+let value = [];
+const button = document.querySelectorAll(".number");
+button.forEach((button) => {
+    button.addEventListener("click", () => {
+        value.push(button.id)
+        let number = document.createTextNode(button.id);
+        display.appendChild(number);  
+        console.log(value)    
+    })
+})
+
 
 let firstOperator = 33;
 let secondtOperator = 11;
 let operand = "divide";
 
+
+// Function to exec a operation with 2 numbers
 function operate(first, second, operand){
     let result = 0;
     switch(operand){
@@ -23,7 +37,6 @@ function operate(first, second, operand){
 
     }
 }
-
 
 // Functions for the basics operations(+,-,*,/)
 function add(a, b){
@@ -54,6 +67,6 @@ function divide(a, b){
 // console.log(subtract(a,b))
 // console.log(divide(a,b))
 
-console.log(operate(firstOperator,secondtOperator,operand))
+
 
 
