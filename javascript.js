@@ -27,9 +27,7 @@ button.forEach((button) => {
         else if (button.className === "operand"){ 
             operand.push(button.id);
             displayNumber("");
-            whenOperandIsPressed(value, operand)
-            console.log("asdadasd")
-              
+            whenOperandIsPressed(value, operand)     
         }
         else if (button.id === "clear" ){
             whenClearIsPressed();
@@ -122,6 +120,9 @@ function whenNumberIsPressed (array){
 // this is the main function. When operand is pressed it stores the value on firstOperatorArray in firstOperator and the secondOperatorArray in secondOperator
 // it also use the operate function to do the operation.
 function whenOperandIsPressed (array, operandArray){
+    if (operantionLinger === true && operandArray.length > 1 && array.length === 0){
+        operandArray.shift()
+    }
     if (operandArray.length > 0 && array.length === 0 && operantionLinger === false){
         operandArray.shift()
     }
@@ -130,7 +131,7 @@ function whenOperandIsPressed (array, operandArray){
         array.splice(0, array.length);
         firstOperatorArray.splice(0, firstOperatorArray.length);
     }
-    else if (operandArray.length === 2 && typeof firstOperator === "number"){
+    else if (operandArray.length === 2 && typeof firstOperator === "number" && secondOperatorArray.length > 0){
         secondOperator = parseFloat(secondOperatorArray.slice().join(""));
         result = parseFloat(operate(firstOperator,secondOperator,operandArray[0]));
         array.splice(0, array.length);
@@ -140,6 +141,7 @@ function whenOperandIsPressed (array, operandArray){
         secondOperator = null
         secondOperatorArray.splice(0, secondOperatorArray.length);
         operantionLinger = false;
+
     }
 }
 
