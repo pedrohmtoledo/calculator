@@ -11,8 +11,7 @@ let operand = [];
 let result = null;
 let equalArray = [];
 let operantionLinger = false;
-
-
+console.log(displayTwoDecimalsIfany(3.01))
 
 const button = document.querySelectorAll("button");
 button.forEach((button) => {
@@ -44,7 +43,6 @@ button.forEach((button) => {
         }
       })
 })
-
 
 // Function to exec a operation with 2 numbers
 function operate(first, second, operand){
@@ -93,11 +91,11 @@ function displayNumber(displayText){
 // This function caculates de result when equal is pressed. it also sets the operationLinger to true in case the use wants to use the result to the next op
 function whenEqualisPressed(array, operandArray){
     if (equalArray.length === 1 && operandArray.length > 0 && secondOperatorArray.length > 0){
-        secondOperator = parseInt(secondOperatorArray.slice().join(""));
-        result = parseInt(operate(firstOperator,secondOperator,operandArray[0]));
+        secondOperator = parseFloat(secondOperatorArray.slice().join(""));
+        result = parseFloat(operate(firstOperator,secondOperator,operandArray[0]));
         array.splice(0, array.length);
         operandArray.shift();
-        displayNumber(result);
+        displayNumber(displayTwoDecimalsIfany(result));
         firstOperator = result;
         secondOperator = null;
         secondOperatorArray.splice(0, secondOperatorArray.length);
@@ -128,16 +126,16 @@ function whenOperandIsPressed (array, operandArray){
         operandArray.shift()
     }
     else if (operandArray.length === 1 && array.length > 0){
-        firstOperator = parseInt(firstOperatorArray.slice().join(""));
+        firstOperator = parseFloat(firstOperatorArray.slice().join(""));
         array.splice(0, array.length);
         firstOperatorArray.splice(0, firstOperatorArray.length);
     }
     else if (operandArray.length === 2 && typeof firstOperator === "number"){
-        secondOperator = parseInt(secondOperatorArray.slice().join(""));
-        result = parseInt(operate(firstOperator,secondOperator,operandArray[0]));
+        secondOperator = parseFloat(secondOperatorArray.slice().join(""));
+        result = parseFloat(operate(firstOperator,secondOperator,operandArray[0]));
         array.splice(0, array.length);
         operandArray.shift();
-        displayNumber(result);
+        displayNumber(displayTwoDecimalsIfany(result));
         firstOperator = result;
         secondOperator = null
         secondOperatorArray.splice(0, secondOperatorArray.length);
@@ -155,4 +153,8 @@ function whenClearIsPressed () {
     value = [];
     operand = [];
     equalArray = [];
+}
+
+function displayTwoDecimalsIfany(amount){
+    return (amount % 1 !== 0) ? amount.toFixed(2) :  amount;
 }
