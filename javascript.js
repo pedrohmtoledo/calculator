@@ -1,101 +1,49 @@
 
 // create a array to store the buttons pressed. show the buttons pressed on the display.
 const display = document.querySelector("#display");
-
+// variables ta will be use by the calculator code
 let value = [];
-const operandsArray = ["add", "subtract", "multiply", "divide"]
 let firstOperator = null;
+let firstOperatorArray = [];
 let secondOperator = null;
+let secondOperatorArray = [];
 let operand = [];
-let result;
-// let indexOfOperand;
-// let operatorCounter = 0;
+let result = null;
+let equalArray = [];
+let operantionLinger = false;
+
+
 
 const button = document.querySelectorAll("button");
 button.forEach((button) => {
     button.addEventListener("click", () => {
+
         if (button.className === "number"){ 
             value.push(button.id);
-            // let numbersTyped = parseInt(value.join(""))
-            // document.getElementById("display").innerHTML = ""
-            // textDIsplay = document.createTextNode(numbersTyped);
-            // display.appendChild(textDIsplay);
-            // getOperatorsAndOperand(value); 
+            let numbersTyped = parseInt(value.join(""))
+            displayNumber(numbersTyped); 
+            whenNumberIsPressed(value)
+                        
         }
-        else if (button.className === "operand" && typeof result != "number"){ 
+        else if (button.className === "operand"){ 
             operand.push(button.id);
-            console.log(result)
-            getOperatorsAndOperand(value); 
-            document.getElementById("display").innerHTML = "";
-        }
-        else if (button.id === "clear"){
-            firstOperator = null;
-            secondOperator = null;
-            operand = [];
-            value = [];
-            document.getElementById("display").innerHTML = "";
-        }
-        else if(typeof result === "number" && button.className === "operand"){
-            document.getElementById("display").innerHTML = result;
-            result = null;
-        }
-       
-        console.log(value)
-        console.log(operand.length)
-    })
-})
-
-
-// function to breakdown the array clicked in the calculator and calculate using operate function.
-// fix the function below
-
-function getOperatorsAndOperand(array){
-            
-    if(operand.length > 0 && array.length === 0){
-        operand.shift()
-        console.log(operand);
-        console.log("primeiro if")
-            
-        
-    }
-    else if(operand.length > 0 && array.length > 0 && typeof firstOperator != "number"){
-        firstOperator = parseInt(array.slice().join(""));
-        array.splice(0, array.length);
-        operand.slice(0, operand.length)
-        console.log("test")
-        console.log(firstOperator)
-        console.log(array)
-                         
-    }
-    else if(operand.length === 2 && typeof(firstOperator) === "number"){
-        secondOperator = parseInt(array.slice().join(""))
-        result = operate(firstOperator,secondOperator,operand[0]);
-        operand.shift()
-        console.log(`this is first ${firstOperator}`)
-        console.log(`this is second ${secondOperator}`);
-        console.log(result);
-        console.log(array);
-        array.splice(0, array.length);
-        firstOperator = result;
-        console.log("ultimo if")
-
-
-            // console.log(array);
-            // array.splice(0,array.length, result);
-            // array.push(operand);
-            // firstOperator = result;
-            // secondOperator = null;
-            // console.log(value);
-            // console.log(firstOperator);
-            // console.log("test");
-            
-            // indexOfOperand = array.indexOf(array[i])
-            // console.log(firstOperator)
-            // console.log(indexOfOperand)   
+            displayNumber("");
+            whenOperandIsPressed(value, operand)
+            console.log("asdadasd")
               
-        }       
+        }
+        else if (button.id === "clear" ){
+            whenClearIsPressed();
+            displayNumber("");
+           
+        }
+        else if (button.id === "equal"){
+            equalArray.push(button.id);
+            whenEqualisPressed(value, operand);
             
-    }
+        }
+      })
+})
 
 
 // Function to exec a operation with 2 numbers
@@ -135,9 +83,76 @@ function divide(a, b){
     return a / b;
 }
 
+// function to insert values to the display
+function displayNumber(displayText){
+    document.getElementById("display").innerHTML = "";
+    textDisplay = document.createTextNode(displayText);
+    display.appendChild(textDisplay);
+}
 
+// This function caculates de result when equal is pressed. it also sets the operationLinger to true in case the use wants to use the result to the next op
+function whenEqualisPressed(array, operandArray){
+    if (equalArray.length === 1 && operandArray.length > 0 && secondOperatorArray.length > 0){
+        secondOperator = parseInt(secondOperatorArray.slice().join(""));
+        result = parseInt(operate(firstOperator,secondOperator,operandArray[0]));
+        array.splice(0, array.length);
+        operandArray.shift();
+        displayNumber(result);
+        firstOperator = result;
+        secondOperator = null;
+        secondOperatorArray.splice(0, secondOperatorArray.length);
+        equalArray.pop();
+        operantionLinger = true;
+        
+    }
+    else {
+        equalArray.pop();
+    }
 
+}
 
+// Function to store the numbers pressed in second or first operator array.
+function whenNumberIsPressed (array){
+    if (firstOperator === null){
+        firstOperatorArray = array;
+    }
+    else {
+        secondOperatorArray = array;
+    }
+}
 
+// this is the main function. When operand is pressed it stores the value on firstOperatorArray in firstOperator and the secondOperatorArray in secondOperator
+// it also use the operate function to do the operation.
+function whenOperandIsPressed (array, operandArray){
+    if (operandArray.length > 0 && array.length === 0 && operantionLinger === false){
+        operandArray.shift()
+    }
+    else if (operandArray.length === 1 && array.length > 0){
+        firstOperator = parseInt(firstOperatorArray.slice().join(""));
+        array.splice(0, array.length);
+        firstOperatorArray.splice(0, firstOperatorArray.length);
+    }
+    else if (operandArray.length === 2 && typeof firstOperator === "number"){
+        secondOperator = parseInt(secondOperatorArray.slice().join(""));
+        result = parseInt(operate(firstOperator,secondOperator,operandArray[0]));
+        array.splice(0, array.length);
+        operandArray.shift();
+        displayNumber(result);
+        firstOperator = result;
+        secondOperator = null
+        secondOperatorArray.splice(0, secondOperatorArray.length);
+        operantionLinger = false;
+    }
+}
 
-
+// function to clear all variables when clear is pressed
+function whenClearIsPressed () {
+    firstOperator = null;
+    firstOperatorArray = [];
+    secondOperator = null;
+    secondOperatorArray = [];
+    result = null;
+    value = [];
+    operand = [];
+    equalArray = [];
+}
